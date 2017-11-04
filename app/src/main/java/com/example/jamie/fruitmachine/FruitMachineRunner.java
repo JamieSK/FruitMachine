@@ -56,8 +56,8 @@ public class FruitMachineRunner {
     } else {
       playerFunds -= 1;
       try {
-        int winnings = fm.spin();
-        fm.slowPrintReels();
+        int winnings = fm.spinIndices();
+        fm.printThreeLines();
 
         winningCheck(playerFunds, winnings);
 
