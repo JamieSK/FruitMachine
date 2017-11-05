@@ -11,16 +11,12 @@ import java.util.concurrent.TimeUnit;
 
 class FruitMachine {
   private int funds;
-  private Symbol[] reels;
   private ArrayList<Symbol> symbolArray;
   private Integer[] indices;
 
   FruitMachine(int funds, int reels) {
     this.funds = funds;
-    this.reels = new Symbol[reels];
     this.symbolArray = generateSymbolArray();
-    spinReels();
-
     this.indices = new Integer[reels];
   }
 
@@ -35,28 +31,6 @@ class FruitMachine {
     return result;
   }
 
-  Symbol getRandomSymbol() {
-    int randomNumber = new Random().nextInt(symbolArray.size());
-    return symbolArray.get(randomNumber);
-  }
-
-  Symbol[] spinReels() {
-    Symbol[] newArray = reels;
-    for (int i = 0; i < newArray.length; i++) {
-      newArray[i] = getRandomSymbol();
-    }
-    return newArray;
-  }
-
-  boolean checkWin() {
-    for (Symbol reel : reels) {
-      if (reel != reels[0]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   private int payOut(int winnings) throws NotEnoughMoneyException {
     if (funds >= winnings) {
       funds -= winnings;
@@ -64,24 +38,6 @@ class FruitMachine {
     } else {
       throw new NotEnoughMoneyException(winnings);
     }
-  }
-
-  int spin() throws NotEnoughMoneyException {
-    reels = spinReels();
-    if (checkWin()) {
-      return payOut(reels[0].getWinnings());
-    } else {
-      return 0;
-    }
-  }
-
-  void slowPrintReels() throws InterruptedException {
-    TimeUnit.MILLISECONDS.sleep(500);
-    for (Symbol reel : reels) {
-      System.out.print(reel.getEmoji() + " ");
-      TimeUnit.MILLISECONDS.sleep(500);
-    }
-    System.out.println("");
   }
 
   int spinIndices() throws NotEnoughMoneyException {
@@ -105,16 +61,25 @@ class FruitMachine {
     return true;
   }
 
+  void printOneLineSlowly() throws InterruptedException {
+    TimeUnit.MILLISECONDS.sleep(500);
+    for (Integer i : indices) {
+      System.out.print(symbolArray.get(i).getEmoji() + " ");
+      TimeUnit.MILLISECONDS.sleep(500);
+    }
+    System.out.println("");
+  }
+
   void printThreeLines() {
-    String line1 = "  ";
-    String line2 = "- ";
-    String line3 = "  ";
+    StringBuilder line1 = new StringBuilder("  ");
+    StringBuilder line2 = new StringBuilder("- ");
+    StringBuilder line3 = new StringBuilder("  ");
 
     for (Integer i : indices) {
       int middle = i + symbolArray.size();
-      line3 += symbolArray.get((middle + 1) % symbolArray.size()).getEmoji() + " ";
-      line1 += symbolArray.get((middle - 1) % symbolArray.size()).getEmoji() + " ";
-      line2 += symbolArray.get(middle % symbolArray.size()).getEmoji() + " ";
+      line3.append(symbolArray.get((middle + 1) % symbolArray.size()).getEmoji()).append(" ");
+      line1.append(symbolArray.get((middle - 1) % symbolArray.size()).getEmoji()).append(" ");
+      line2.append(symbolArray.get(middle % symbolArray.size()).getEmoji()).append(" ");
     }
     System.out.println(line1);
     System.out.println(line2 + "-");

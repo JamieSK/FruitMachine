@@ -57,9 +57,9 @@ public class FruitMachineRunner {
       playerFunds -= 1;
       try {
         int winnings = fm.spinIndices();
-        fm.printThreeLines();
+        fm.printOneLineSlowly();
 
-        winningCheck(playerFunds, winnings);
+        playerFunds = winningCheck(playerFunds, winnings);
 
       } catch (NotEnoughMoneyException e) {
         System.out.println(e.getMessage());
@@ -69,12 +69,13 @@ public class FruitMachineRunner {
     return playerFunds;
   }
 
-  private static void winningCheck(int playerFunds, int winnings) {
+  private static int winningCheck(int playerFunds, int winnings) {
     if (winnings > 0) {
       playerFunds += winnings;
       UI.youWon(playerFunds, winnings);
     } else {
       UI.noWin(playerFunds);
     }
+    return playerFunds;
   }
 }
